@@ -11,7 +11,6 @@ module.exports = {
     externals: {
       react: "react",
       "react-dom": "react-dom",
-      "react-router": "react-router",
       antd: "antd",
     },
     plugins: [
@@ -20,12 +19,13 @@ module.exports = {
         "process.env.ENV": JSON.stringify(process.argv[2]),
       }),
     ],
+
     configure: (webpackConfig, { env, paths }) => {
-      paths.appBuild = "docs";
+      paths.appBuild = path.join(path.dirname(paths.appBuild), "docs");
       webpackConfig.output = {
         ...webpackConfig.output,
-        path: path.resolve(__dirname, "docs"),
-        publicPath: "./",
+        path: paths.appBuild,
+        publicPath: env === "production" ? "./" : "/",
       };
       return webpackConfig;
     },
@@ -38,7 +38,6 @@ module.exports = {
           lessOptions: {
             modifyVars: {
               "@tabs-bar-margin": "0px",
-              // "@menu-dark-color": "#fff",
               "@menu-dark-item-hover-bg": "fade(#1890ff, 15%)",
             },
             javascriptEnabled: true,
